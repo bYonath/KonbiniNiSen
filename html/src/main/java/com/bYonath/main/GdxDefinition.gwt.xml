@@ -12,7 +12,6 @@
   <inherits name="com.badlogic.gdx.ai" />
   <inherits name="com.badlogic.gdx.physics.box2d.box2d-gwt" />
   <inherits name="de.golfgl.gdx.controllers.controller_scene2d" />
-
   <!-- You must change this if you rename packages later, or rename GwtLauncher. -->
   <entry-point class="com.bYonath.main.gwt.GwtLauncher" />
 
