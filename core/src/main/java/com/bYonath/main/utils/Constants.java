@@ -2,6 +2,7 @@ package com.bYonath.main.utils;
 
 import com.bYonath.main.ecs.components.Box2DComponent;
 import com.bYonath.main.ecs.components.PlayerComponent;
+import com.bYonath.main.ecs.components.TextureComponent;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.gdx.math.Vector2;
 
@@ -16,6 +17,7 @@ public class Constants
     public static final String PLAYER_TAG = "PLAYER";
     public static final int PLAYER_WIDTH = 32;
     public static final int PLAYER_HEIGHT = 32;
+
     // Collision info
     public static final short PLAYER_CBIT = 0;
     public static final short PLAYER_MBIT = 0;
@@ -26,4 +28,6 @@ public class Constants
         = ComponentMapper.getFor(Box2DComponent.class);
     public static final ComponentMapper<PlayerComponent> PLAYER_COMPONENT_MAPPER
         = ComponentMapper.getFor(PlayerComponent.class);
+    public static final ComponentMapper<TextureComponent> TEXTURE_COMPONENT_MAPPER
+        = ComponentMapper.getFor(TextureComponent.class);
 }
