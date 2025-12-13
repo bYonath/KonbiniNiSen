@@ -3,6 +3,7 @@ package com.bYonath.main.ecs.systems;
 import com.bYonath.main.ecs.components.Box2DComponent;
 import com.bYonath.main.ecs.components.PlayerComponent;
 import com.bYonath.main.ecs.components.TextureComponent;
+import com.bYonath.main.scenes.StoreGame;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
@@ -33,7 +34,7 @@ public class PlayerMovementSystem extends IteratingSystem {
         Box2DComponent box2DComponent = BOX2D_COMPONENT_MAPPER.get(entity);
         TextureComponent textureComponent = TEXTURE_COMPONENT_MAPPER.get(entity);
 
-        OrthographicCamera camera = playerComponent.camera;
+        OrthographicCamera camera = StoreGame.camera;
         Vector2 velocity = playerComponent.velocity;
         Body player = box2DComponent.body;
         Texture texture = textureComponent.image;
@@ -56,19 +57,19 @@ public class PlayerMovementSystem extends IteratingSystem {
 
         if(Gdx.input.isKeyPressed(Input.Keys.W))
         {
-            velocity.y = -PLAYER_SPEED;
+            velocity.y = PLAYER_SPEED;
         }
         if(Gdx.input.isKeyPressed(Input.Keys.S))
         {
-            velocity.y = PLAYER_SPEED;
+            velocity.y = -PLAYER_SPEED;
         }
         if(Gdx.input.isKeyPressed(Input.Keys.A))
         {
-            velocity.x = PLAYER_SPEED;
+            velocity.x = -PLAYER_SPEED;
         }
         if(Gdx.input.isKeyPressed(Input.Keys.D))
         {
-            velocity.x = -PLAYER_SPEED;
+            velocity.x = PLAYER_SPEED;
         }
 
         player.setLinearVelocity(velocity);

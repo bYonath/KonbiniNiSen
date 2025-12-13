@@ -21,7 +21,30 @@ public class Box2DUtils
         {
             Shape shape;
 
-            if(object instanceof RectangleMapObject)
+            if(object.getName() != null)
+            {
+                String SpecObjName = object.getName();
+
+                switch(SpecObjName)
+                {
+                    case "player_spawn_tile_obj":
+                        System.out.println("Player Object Found");
+                        loadPlayer(world, (RectangleMapObject) object);
+                        break;
+                    case "door_event_area":
+                        System.out.println("Door Event area found");
+                        break;
+                    case "shop_event_area":
+                        System.out.println("Shop Event area found");
+                        break;
+                    default:
+                        System.out.println("Something Else");
+                        break;
+                }
+
+                shape = createRectangle((RectangleMapObject) object);
+            }
+            else if(object instanceof RectangleMapObject)
             {
                 shape = createRectangle((RectangleMapObject) object);
             }
@@ -44,13 +67,22 @@ public class Box2DUtils
         Rectangle rectangle = rectangleObject.getRectangle();
         PolygonShape polygon = new PolygonShape();
 
-        float y_center_dist = (rectangle.y + rectangle.width * 0.5f)/PPM;
-        float x_center_dist = (rectangle.x + rectangle.height * 0.5f)/PPM;
+        float y_center_dist = (rectangle.y + rectangle.height * 0.5f)/PPM;
+        float x_center_dist = (rectangle.x + rectangle.width * 0.5f)/PPM;
         // note: box2D generates shapes from the center
         Vector2 center = new Vector2(x_center_dist,
             y_center_dist);
 
-        polygon.setAsBox(x_center_dist, y_center_dist, center, 0);
+        float hx = rectangle.width * 0.5f / PPM;
+        float hy = rectangle.height * 0.5f / PPM;
+        polygon.setAsBox(hx, hy, center, 0);
+
+//        Vector2 size = new Vector2((rectangle.x + rectangle.width * 0.5f) / Constants.PPM,
+//            (rectangle.y + rectangle.height * 0.5f ) / Constants.PPM);
+//        polygon.setAsBox(rectangle.width * 0.5f /Constants.PPM,
+//            rectangle.height * 0.5f / Constants.PPM,
+//            size,
+//            0.0f);
 
         return polygon;
     }
@@ -98,5 +130,17 @@ public class Box2DUtils
     }
 
     // Circle type?
+
+    // Special TMR Methods
+    public static void loadPlayer(World world, RectangleMapObject startingLocation)
+    {
+        Rectangle startingRect = startingLocation.getRectangle();
+
+        Vector2 startPos = new Vector2(startingRect.x/PPM,startingRect.y/PPM);
+
+        playerBdRepr = createBody(world, false,
+            true, false, PLAYER_WIDTH,PLAYER_HEIGHT,
+            startPos, PLAYER_CBIT,PLAYER_MBIT,PLAYER_GINDX);
+    }
 
 }

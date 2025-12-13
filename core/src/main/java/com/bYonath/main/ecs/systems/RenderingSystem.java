@@ -2,11 +2,14 @@ package com.bYonath.main.ecs.systems;
 
 import com.bYonath.main.ecs.components.Box2DComponent;
 import com.bYonath.main.ecs.components.TextureComponent;
+import com.bYonath.main.scenes.StoreGame;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.MapRenderer;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.physics.box2d.Body;
 
 import static com.bYonath.main.utils.Constants.*;
@@ -27,6 +30,9 @@ public class RenderingSystem extends IteratingSystem
         Body body = box2DComponent.body;
         Texture texture = textureComponent.image;
         SpriteBatch batch = textureComponent.batch;
+        OrthogonalTiledMapRenderer mapRenderer = StoreGame.mapRenderer;
+
+        updateMap(mapRenderer);
 
         batch.begin();
 
@@ -37,9 +43,15 @@ public class RenderingSystem extends IteratingSystem
 
     public void updateTexture(SpriteBatch batch, Body body, Texture texture)
     {
-
         batch.draw(texture,
             body.getPosition().x * PPM - (texture.getWidth()/SCALE),
             body.getPosition().y * PPM - (texture.getHeight()/SCALE));
+    }
+    public void updateMap(OrthogonalTiledMapRenderer mpRend)
+    {
+        // Map Rendering code!
+        mpRend.render();
+        mpRend.setView(StoreGame.camera);
+        //System.out.println("running map");
     }
 }

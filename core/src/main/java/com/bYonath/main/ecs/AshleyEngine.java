@@ -68,16 +68,22 @@ public class AshleyEngine extends PooledEngine
         textureComponent.batch = batch;
 
         // set the stuff for the things
-        Body playerBody = box2DComponent.body = createBody(world, false,
-            true, false, PLAYER_WIDTH,PLAYER_HEIGHT,
-            new Vector2(0,0), PLAYER_CBIT,PLAYER_MBIT,PLAYER_GINDX);
-
-        // set starting camera position
-        playerComponent.camera.position.set(
-            playerBody.getPosition().x*PPM,
-            playerBody.getPosition().y*PPM, 0);
-        // update camera
-        playerComponent.camera.update();
+        try {
+            Body playerBody = box2DComponent.body = playerBdRepr;
+            // set starting camera position
+            playerComponent.camera.position.set(
+                playerBody.getPosition().x*PPM,
+                playerBody.getPosition().y*PPM, 0);
+            //camera.position.set(playerBody.getPosition().x*PPM,
+            //playerBody.getPosition().y*PPM, 0);
+            // update camera
+            playerComponent.camera.update();
+            //camera.update();
+        }
+        catch (NullPointerException e)
+        {
+           System.out.println("Failed to load player body from the tiled layout, possibly missing player_spawn_area?");
+        }
 
         // add stuff to the entity
         player.add(playerComponent);
