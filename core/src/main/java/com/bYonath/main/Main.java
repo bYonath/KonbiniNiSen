@@ -1,5 +1,6 @@
 package com.bYonath.main;
 
+import com.bYonath.main.scenes.Menu;
 import com.bYonath.main.scenes.StoreGame;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
@@ -17,10 +18,12 @@ import com.badlogic.gdx.utils.ScreenUtils;
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends Game {
     StoreGame game;
+    Menu menu;
 
     @Override
     public void create() {
         game = new StoreGame();
+        menu = new Menu();
         this.setScreen(game);
     }
 

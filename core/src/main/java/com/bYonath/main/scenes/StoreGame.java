@@ -33,6 +33,8 @@ public class StoreGame implements Screen {
     private TimeSystem timeSystem;
     // Tileset Stuff
     private TiledMap BaseMap;
+    // This is not truly the best way to implement this type of thing
+    // lol
     public static OrthogonalTiledMapRenderer mapRenderer;
 
     public StoreGame()

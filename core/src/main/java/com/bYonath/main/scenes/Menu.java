@@ -1,8 +1,18 @@
 package com.bYonath.main.scenes;
 
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class Menu implements Screen {
+
+    // Finish this by 12/17/2025
+    Skin skin = new Skin();
+
+    Stage stage = new Stage();
+    Button button = new Button();
+
     @Override
     public void show() {
 

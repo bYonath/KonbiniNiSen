@@ -21,29 +21,32 @@ public class Box2DUtils
         {
             Shape shape;
 
-            if(object.getName() != null)
+            if(object.getName() != null && object.getName().equals("player_spawn_tile_obj"))
             {
-                String SpecObjName = object.getName();
+                System.out.println("player spawn object found");
 
-                switch(SpecObjName)
-                {
-                    case "player_spawn_tile_obj":
-                        System.out.println("Player Object Found");
-                        loadPlayer(world, (RectangleMapObject) object);
-                        break;
-                    case "door_event_area":
-                        System.out.println("Door Event area found");
-                        break;
-                    case "shop_event_area":
-                        System.out.println("Shop Event area found");
-                        break;
-                    default:
-                        System.out.println("Something Else");
-                        break;
-                }
+                // May wanna use the shape generator to create the body
+                // for the player lol
+//                shape = createRectangle((RectangleMapObject) object);
+                loadPlayer(world, (RectangleMapObject) object);
+                continue;
+            }
+            // Shop event area code
+            if(object.getName() != null && object.getName().equals("shop_event_area"))
+            {
+                System.out.println("Shop event area found");
 
                 shape = createRectangle((RectangleMapObject) object);
             }
+            // Door event area code
+            if(object.getName() != null && object.getName().equals("door_event_area"))
+            {
+                System.out.println("Door event area found");
+
+                shape = createRectangle((RectangleMapObject) object);
+            }
+
+            // For basically everything else
             else if(object instanceof RectangleMapObject)
             {
                 shape = createRectangle((RectangleMapObject) object);
@@ -55,10 +58,17 @@ public class Box2DUtils
 
             Body body;
 
+            // Create the bodydef
             BodyDef bdef = new BodyDef();
             bdef.type = BodyDef.BodyType.StaticBody;
             body = world.createBody(bdef);
-            body.createFixture(shape, 1.0f);
+            // Fixtures and collisions here
+            FixtureDef fdef = new FixtureDef();
+            fdef.shape = shape;
+            fdef.density = 1.0f;
+            fdef.filter.categoryBits = 0;
+            fdef.filter.maskBits = PLAYER_CBIT;
+            body.createFixture(fdef);
             shape.dispose();
         }
     }
@@ -140,7 +150,7 @@ public class Box2DUtils
 
         playerBdRepr = createBody(world, false,
             true, false, PLAYER_WIDTH,PLAYER_HEIGHT,
-            startPos, PLAYER_CBIT,PLAYER_MBIT,PLAYER_GINDX);
+            startPos, PLAYER_CBIT, PLAYER_MBIT,PLAYER_GINDX);
     }
 
 }
