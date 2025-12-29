@@ -12,8 +12,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 // KONBINI-NI-SEN, **WELCOME!**
 // Code contributors:
-// - Nathaniel Gutierrez (bYonath)
-// - Roj
+// - NG
+// - R
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends Game {

@@ -1,17 +1,77 @@
 package com.bYonath.main.scenes;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 public class Menu implements Screen {
 
     // Finish this by 12/17/2025
-    Skin skin = new Skin();
+    Skin skin;
 
-    Stage stage = new Stage();
-    Button button = new Button();
+    Stage stage;
+    Table table;
+
+    TextButton startButton;
+    TextButton creditsButton;
+    TextButton settingsButton;
+
+    Image background;
+
+    public Menu()
+    {
+        background = new Image(
+            new Texture(Gdx.files.internal("GameBackground.png")));
+
+        skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+
+        stage = new Stage();
+
+        Gdx.input.setInputProcessor(stage);
+
+        table = new Table();
+
+        startButton = new TextButton("Start", skin);
+
+        startButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                System.out.println("Start Button Clicked");
+            }
+        });
+
+        creditsButton = new TextButton("Credits", skin);
+
+        creditsButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                System.out.println("Credits Button Clicked");
+            }
+        });
+
+        settingsButton = new TextButton("Settings", skin);
+
+        settingsButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                System.out.println("Settings Button Pressed");
+            }
+        });
+
+        table.setFillParent(true);
+
+        stage.addActor(table);
+        table.addActor(background);
+        table.add(startButton).width(100f);
+        table.add(settingsButton).width(100f);
+        table.add(creditsButton).width(100f);
+    }
 
     @Override
     public void show() {
@@ -20,7 +80,8 @@ public class Menu implements Screen {
 
     @Override
     public void render(float delta) {
-
+        stage.act();
+        stage.draw();
     }
 
     @Override

@@ -20,9 +20,9 @@ public class Constants
     public static final int PLAYER_HEIGHT = 16;
 
     // Collision info
-    public static final short PLAYER_CBIT = 0;
-    public static final short PLAYER_MBIT = 0;
-    public static final short PLAYER_GINDX = 0;
+    public static final short PLAYER_CBIT = 2;
+    public static final short PLAYER_MBIT = 2;
+    public static final short PLAYER_GINDX = 2;
 
     // Update Intervals
     public static final int UPDATE_CYCLE_MINUTES = 10;

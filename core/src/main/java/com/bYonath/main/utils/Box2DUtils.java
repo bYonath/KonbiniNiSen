@@ -11,12 +11,16 @@ import static com.bYonath.main.utils.Constants.*;
 public class Box2DUtils
 {
 
+    public static Vector2 playerSpawn = new Vector2();
     // Tile-map rendering boilerplate
     // this will parse through the tiled object layer
     // ill add in some special stuff to generate some other tiles
     // later on hopefully add a way to update tiles and save em!
     public static void parseTiledMapObjectLayer(World world, MapObjects objects)
     {
+        boolean isSensor = false;
+        boolean isPlayerSpawnPoint = false;
+
         for(MapObject object: objects)
         {
             Shape shape;
@@ -27,29 +31,39 @@ public class Box2DUtils
 
                 // May wanna use the shape generator to create the body
                 // for the player lol
-//                shape = createRectangle((RectangleMapObject) object);
+                //shape = createRectangle((RectangleMapObject) object, true);
+
+                isPlayerSpawnPoint = true;
+
                 loadPlayer(world, (RectangleMapObject) object);
+
                 continue;
             }
             // Shop event area code
-            if(object.getName() != null && object.getName().equals("shop_event_area"))
+            else if(object.getName() != null && object.getName().equals("shop_event_area"))
             {
                 System.out.println("Shop event area found");
 
-                shape = createRectangle((RectangleMapObject) object);
+                shape = createRectangle((RectangleMapObject) object, false);
+
+                isSensor = true;
             }
             // Door event area code
-            if(object.getName() != null && object.getName().equals("door_event_area"))
+            else if(object.getName() != null && object.getName().equals("door_event_area"))
             {
                 System.out.println("Door event area found");
 
-                shape = createRectangle((RectangleMapObject) object);
+                shape = createRectangle((RectangleMapObject) object, false);
+
+                isSensor = true;
             }
 
             // For basically everything else
             else if(object instanceof RectangleMapObject)
             {
-                shape = createRectangle((RectangleMapObject) object);
+                shape = createRectangle((RectangleMapObject) object, false);
+
+                isSensor = false;
             }
             else
             {
@@ -60,20 +74,74 @@ public class Box2DUtils
 
             // Create the bodydef
             BodyDef bdef = new BodyDef();
+
             bdef.type = BodyDef.BodyType.StaticBody;
             body = world.createBody(bdef);
+
+            // MORE CONFIGURATIONS!!!
+            if(object.getName() != null) {
+                switch (object.getName()) {
+                    case "door_event_area":
+                        body.setUserData("DOOR_AREA");
+                        break;
+                    case "shop_event_area":
+                        body.setUserData("SHOP_AREA");
+                        break;
+                    default:
+                        System.out.println("Placeholder for something else");
+                        break;
+                }
+            }
+
             // Fixtures and collisions here
             FixtureDef fdef = new FixtureDef();
             fdef.shape = shape;
             fdef.density = 1.0f;
-            fdef.filter.categoryBits = 0;
+            fdef.filter.categoryBits = (short) 4;
+            fdef.filter.groupIndex = 0;
             fdef.filter.maskBits = PLAYER_CBIT;
+            fdef.isSensor = isSensor;
+
             body.createFixture(fdef);
             shape.dispose();
+
+//            if(!isPlayerSpawnPoint) {
+//                bdef.type = BodyDef.BodyType.StaticBody;
+//                body = world.createBody(bdef);
+//                // Fixtures and collisions here
+//                FixtureDef fdef = new FixtureDef();
+//                fdef.shape = shape;
+//                fdef.density = 1.0f;
+//                fdef.filter.categoryBits = (short) 4;
+//                fdef.filter.groupIndex = 0;
+//                fdef.filter.maskBits = PLAYER_CBIT;
+//                fdef.isSensor = isSensor;
+//                body.createFixture(fdef);
+//                shape.dispose();
+//            }
+//            else
+//            {
+//                bdef.type = BodyDef.BodyType.DynamicBody;
+//                bdef.position.set(playerSpawn);
+//
+//                body = world.createBody(bdef);
+//                // Fixtures and collisions here
+//                FixtureDef fdef = new FixtureDef();
+//                fdef.shape = shape;
+//                fdef.density = 1.0f;
+//                fdef.filter.categoryBits = PLAYER_CBIT;
+//                fdef.filter.groupIndex = 0;
+//                fdef.filter.maskBits = (short) 4;
+//                body.createFixture(fdef);
+//                shape.dispose();
+//
+//                isPlayerSpawnPoint = false;
+//                playerBdRepr = body;
+//            }
         }
     }
 
-    private static PolygonShape createRectangle(RectangleMapObject rectangleObject) {
+    private static PolygonShape createRectangle(RectangleMapObject rectangleObject, boolean isPlayer) {
         Rectangle rectangle = rectangleObject.getRectangle();
         PolygonShape polygon = new PolygonShape();
 
@@ -85,6 +153,12 @@ public class Box2DUtils
 
         float hx = rectangle.width * 0.5f / PPM;
         float hy = rectangle.height * 0.5f / PPM;
+
+        if(isPlayer)
+        {
+            playerSpawn.set(hx,hy);
+        }
+
         polygon.setAsBox(hx, hy, center, 0);
 
 //        Vector2 size = new Vector2((rectangle.x + rectangle.width * 0.5f) / Constants.PPM,
@@ -104,7 +178,7 @@ public class Box2DUtils
     public static Body createBody(
         World world, boolean isStatic, boolean isFixed,
         boolean isSensor, int width, int height, Vector2 pos,
-        short cBits, short mBits, short gIndx
+        short cBits, short mBits, short gIndx, String tag
     )
     {
         Body body;
@@ -122,6 +196,8 @@ public class Box2DUtils
         // Add the body into the world
         body = world.createBody(bodyDef);
 
+        body.setUserData(tag);
+
         // Create the collision box
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(width/SCALE/PPM, height/SCALE/PPM);
@@ -130,9 +206,9 @@ public class Box2DUtils
         fixtureDef.shape = shape;
         fixtureDef.isSensor = isSensor;
         fixtureDef.density = 1.0f;
-        fixtureDef.filter.maskBits = 0;
-        fixtureDef.filter.categoryBits = 0;
-        fixtureDef.filter.groupIndex = 0;
+        fixtureDef.filter.categoryBits = cBits; // is a
+        fixtureDef.filter.maskBits = mBits; // collides with
+        fixtureDef.filter.groupIndex = gIndx;
 
         body.createFixture(fixtureDef);
 
@@ -146,11 +222,14 @@ public class Box2DUtils
     {
         Rectangle startingRect = startingLocation.getRectangle();
 
-        Vector2 startPos = new Vector2(startingRect.x/PPM,startingRect.y/PPM);
+        float startX = (startingRect.x + startingRect.width * 0.5f);
+        float startY = (startingRect.y + startingRect.height * 0.5f);
+
+        Vector2 startPos = new Vector2(startX,startY);
 
         playerBdRepr = createBody(world, false,
             true, false, PLAYER_WIDTH,PLAYER_HEIGHT,
-            startPos, PLAYER_CBIT, PLAYER_MBIT,PLAYER_GINDX);
+            startPos, PLAYER_CBIT, (short)4, PLAYER_GINDX, PLAYER_TAG);
     }
 
 }

@@ -4,6 +4,7 @@ import static com.bYonath.main.utils.Constants.*;
 
 import com.bYonath.main.ecs.AshleyEngine;
 import com.bYonath.main.ecs.components.Box2DComponent;
+import com.bYonath.main.game_systems.ContactSystem;
 import com.bYonath.main.game_systems.TimeSystem;
 import com.bYonath.main.utils.Box2DUtils;
 import com.badlogic.gdx.Gdx;
@@ -40,6 +41,9 @@ public class StoreGame implements Screen {
     public StoreGame()
     {
         world = new World(new Vector2(0,0), false);
+        // forgor to set the contact listener
+        world.setContactListener(new ContactSystem());
+
         debugRenderer = new Box2DDebugRenderer();
         batch = new SpriteBatch();
 
@@ -86,6 +90,8 @@ public class StoreGame implements Screen {
         world.step(1/60f, 6,2);
 
         engine.update(delta);
+
+        //System.out.println(playerBdRepr.getPosition().x);
 
         debugRenderer.render(world, camera.combined.scl(PPM));
     }
