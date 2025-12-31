@@ -35,7 +35,7 @@ public class AshleyEngine extends PooledEngine
         this.batch = batch;
 
         // Create player asset stuff
-        texture = new Texture(Gdx.files.internal("PlayerPlaceholderSpriteKBNS.png"));
+        texture = new Texture(Gdx.files.internal("PlayerV2.png"));
 
         this.addSystem(new PlayerMovementSystem());
         this.addSystem(new RenderingSystem());

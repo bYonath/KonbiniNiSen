@@ -38,4 +38,10 @@ public class Constants
         = ComponentMapper.getFor(TextureComponent.class);
 
     public static Body playerBdRepr = null;
+
+    public static boolean door_contact = false;
+    public static boolean shop_contact = false;
+
+    public static boolean MenuShouldShow = false;
+    public static boolean GameShouldShow = false;
 }

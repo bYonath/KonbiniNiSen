@@ -10,6 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+import static com.bYonath.main.utils.Constants.*;
+
 public class Menu implements Screen {
 
     // Finish this by 12/17/2025
@@ -17,6 +19,8 @@ public class Menu implements Screen {
 
     Stage stage;
     Table table;
+
+    Widget buttonWidget;
 
     TextButton startButton;
     TextButton creditsButton;
@@ -33,6 +37,8 @@ public class Menu implements Screen {
 
         stage = new Stage();
 
+        stage.setDebugAll(true);
+
         Gdx.input.setInputProcessor(stage);
 
         table = new Table();
@@ -43,6 +49,7 @@ public class Menu implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 System.out.println("Start Button Clicked");
+                GameShouldShow = true;
             }
         });
 
@@ -68,9 +75,21 @@ public class Menu implements Screen {
 
         stage.addActor(table);
         table.addActor(background);
-        table.add(startButton).width(100f);
-        table.add(settingsButton).width(100f);
-        table.add(creditsButton).width(100f);
+
+        table.add(startButton)
+            .width(100f)
+            .pad(0.5f);
+        table.row();
+
+        table.add(settingsButton)
+            .width(100f)
+            .pad(0.5f);
+        table.row();
+
+        table.add(creditsButton)
+            .width(100f)
+            .pad(0.5f);
+        table.row();
     }
 
     @Override
